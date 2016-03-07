@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="C++ library, implements a type-safe and thread-safe signals &amp; slots system, based on C++11 atomics">
+	<meta name="keywords" content="C++ library, signals, slots, callbacks, lock free, wait free, atomic, fast, type safe, thread safe, C++11">
+    <meta name="author" content="vdksoft">
+	<meta name="google-site-verification" content="VDW_XbW5LskR7UhKx3AcJOuWCxskhUOHEa-sQgHBPTI">
+    <link rel="shortcut icon" href="assets/ico/favicon.ico">
+
+    <title>C++ signals &amp; slots | vdk-signals</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="assets/css/bootstrap.css" rel="stylesheet">
+    <link href="assets/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="assets/css/main.css" rel="stylesheet">
+
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="http://vdksoft.github.io/signals/"><img src="assets/img/logo.png" alt="vdk" title="vdksoft"></a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="active"><a href="index.html">HOME</a></li>
+            <li><a href="about.html">ABOUT</a></li>
+            <li><a href="features.html">FEATURES</a></li>
+			<li><a href="license.html">LICENSE</a></li>
+			<li><a href="https://github.com/vdksoft/signals/archive/master.zip">DOWNLOAD</a></li>
+			<li><a href="https://github.com/vdksoft/signals">GIT</a></li>
+			<li><a href="doc/signals.pdf">DOCS</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+
+	<div id="headerwrap">
+		<div class="container">
+			<div class="row centered">
+				<div class="col-lg-8 col-lg-offset-2">
+				<h1><img src="assets/img/c-logo.png" id="c-logo" alt="C++"></h1>
+				<h2>Signals &amp; Slots</h2>
+				<h3>Library</h3>
+				<h4>created with high performance in mind</h4>
+				</div>
+			</div><!-- row -->
+		</div><!-- container -->
+	</div><!-- headerwrap -->
+
+
+	<div class="container w">
+		<div class="row centered">
+<div id="content_1">
+<h3>What is Signals &amp; Slots?</h3>
+<p>Signals and slots is a mechanism used for communication between different parts of some application. The key concept is allowing objects of any kind to communicate with one another while keeping them as much decoupled as possible. Signals are emitted by an object when its internal state has changed in some way that might be interesting to other objects. Slots are called when signals connected to them are emitted. Slots can be used to receive signals, but they are also normal C++ functions and can be called directly.</p>
+<p>The signals and slots mechanism is type safe. The signal type must match the signature of the receiving slot and the compiler helps to detect type mismatches generating compile-time errors. Signals and slots can take any number of arguments of any types. Each signal can be connected to any number of slots and each slot can be connected to any number of signals. It is even possible to connect a signal directly to another signal.</p>
+<p>The signals and slots mechanism is especially convenient for Graphical User Interface programming, but can also be used pretty much everywhere. When one widget changes its state it is often expected that other widgets will be notified. Using this mechanism, the widget can send signal containing even information, which can be received by other widgets.</p>
+<p>Signals-slots concept enables a powerful and flexible component programming mechanism that makes code easy to design and reuse.</p>
+</div>
+		</div><!-- row -->
+		<br>
+		<br>
+	</div><!-- container -->
+
+	<div id="r">
+		<div class="container">
+			<div class="row centered">
+				<div class="col-lg-8 col-lg-offset-2">
+					<p>If you have any comments, questions, ideas, suggestions, or propositions, you are welcome to contact the author. All feedbacks will be much appreciated.</p>
+				</div>
+			</div><!-- row -->
+		</div><!-- container -->
+	</div><!-- r wrap -->
+	
+	
+	<!-- FOOTER -->
+	<div id="f">
+		<div class="container">
+			<div class="row centered footer">
+				Copyright © 2016 vdksoft. All rights reserved.
+			</div><!-- row -->
+		</div><!-- container -->
+	</div><!-- Footer -->
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+  </body>
+</html>
