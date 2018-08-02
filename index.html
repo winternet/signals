@@ -1,111 +1,136 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="C++ library, implements a type-safe and thread-safe signals &amp; slots system, based on C++11 atomics">
-	<meta name="keywords" content="C++ library, signals, slots, callbacks, lock free, wait free, atomic, fast, type safe, thread safe, C++11">
-    <meta name="author" content="vdksoft">
-	<meta name="google-site-verification" content="VDW_XbW5LskR7UhKx3AcJOuWCxskhUOHEa-sQgHBPTI">
-    <link rel="shortcut icon" href="assets/ico/favicon.ico">
+<!DOCTYPE HTML>
+<html>
 
-    <title>C++ signals &amp; slots | vdk-signals</title>
+<head>
+  <title>vdk-signals</title>
+  <meta charset="utf-8">
+  <link rel="shortcut icon" href="images/favicon.ico">
+  <script src="js/jquery.min.js"></script>
+  <script src="js/skel.min.js"></script>
+  <script src="js/skel-panels.min.js"></script>
+  <script src="js/init.js"></script>
+  <noscript>
+    <link rel="stylesheet" href="css/skel-noscript.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style-wide.css">
+  </noscript>
+</head>
 
-    <!-- Bootstrap core CSS -->
-    <link href="assets/css/bootstrap.css" rel="stylesheet">
-    <link href="assets/css/font-awesome.min.css" rel="stylesheet">
-
-    <!-- Custom styles for this template -->
-    <link href="assets/css/main.css" rel="stylesheet">
-
-
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
-    <![endif]-->
-  </head>
-
-  <body>
-
-    <!-- Fixed navbar -->
-    <div class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="http://vdksoft.github.io/signals/"><img src="assets/img/logo.png" alt="vdk" title="vdksoft"></a>
-        </div>
-        <div class="navbar-collapse collapse">
-          <ul class="nav navbar-nav navbar-right">
-            <li class="active"><a href="index.html">HOME</a></li>
-            <li><a href="about.html">ABOUT</a></li>
-            <li><a href="features.html">FEATURES</a></li>
-			<li><a href="license.html">LICENSE</a></li>
-			<li><a href="https://github.com/vdksoft/signals/archive/master.zip">DOWNLOAD</a></li>
-			<li><a href="https://github.com/vdksoft/signals">GIT</a></li>
-			<li><a href="doc/signals.pdf">DOCS</a></li>
-          </ul>
-        </div><!--/.nav-collapse -->
+<body>
+  <div id="header" class="skel-panels-fixed">
+    <div class="top">
+      <div id="logo">
+        <img src="images/logo.png" alt="">
+        <h1 id="title">signals</h1>
+        <span class="byline">C++ library</span>
       </div>
+      <nav id="nav">
+        <ul>
+          <li>
+            <a href="#top" id="top-link">Signals</a>
+          </li>
+          <li>
+            <a href="#overview" id="overview-link">Overview</a>
+          </li>
+          <li>
+            <a href="#usage" id="usage-link">Usage</a>
+          </li>
+          <li>
+            <a href="#license" id="license-link">License</a>
+          </li>
+        </ul>
+      </nav>
+      <a href="https://github.com/vdksoft/signals" id="github-button"></a>
     </div>
+    <div class="bottom">
+    </div>
+  </div>
+  <div id="main">
+    <section id="top" class="one">
+      <div class="container small">
+        <header>
+          <h2 class="alt">C++ signals and slots</h2>
+        </header>
+        <p>
+        <strong>vdk-signals</strong> is a type-safe and thread-safe signals-slots system for standard C++ designed with performance and simplicity in mind. It follows the main philosophy of the C++ language avoiding unnecessary overheads and superfluous functionality that can slow down your program.
+        </p>
+        <p>
+        High performance is achieved through the use of modern C++ features and atomic variables. Specialized synchronization mechanism used internally makes signal emissions lock-free and ensures the fastest possible execution. The library supports synchronous and asynchronous slot invocations with automatic detection of target threads, as well as automatic object lifetime tracking.
+        </p>
+        <p>
+        <strong>vdk-signals</strong> has no external dependencies and relies on standard C++17 only. It is organized as the amalgamation and can be easily integrated into any existing project.
+        </p>
+      </div>
+    </section>
+    <section id="overview" class="two">
+      <div class="container">
+        <header>
+          <h2>Overview</h2>
+        </header>
+        <p>
+        There are two main classes in the library: <code>signal</code> and <code>context</code>. Each of them is responsible for some particular tasks and provides interface for internal library's mechanisms.
+        </p>
+        <p>
+        An instance of <code>signal</code> contains a list of connections (connected slots). Any callable target can be connected to a signal as a slot. When the signal is emitted all connected slots, if any, are executed either synchronously or asynchronously (see below). If a connected slot provides equality comparison operator it can be disconnected in exactly the same way as it was connected: just pass it into <code>disconnect()</code> method. If a slot does not provide such operator (e.g. lambda) it can be disconnected by special connection id value returned from <code>connect()</code> method. Two slots are considered to be equal if they are of exactly the same static type, provide accessible equality comparison operator, and compare equal.
+        </p>
+        <p>
+        An instance of class inherited from <code>context</code> provides context for slot invocations. Such class obtains two special features: thread affinity and automatic lifetime tracking. Thread affinity means that an object created in a thread belongs to the thread and, by default, receives all signal emissions in that thread. As a consequence, its slots do not need to be thread-safe in a multithreaded environment; all slot invocations will be serialized in the object's thread anyway. This also guarantees that there are no race conditions: once a slot has been disconnected or its <code>context</code> destroyed, the slot will not be reachable for signal emissions anymore.
+        </p>
+        <p>
+        A <code>context</code> object can also be associated with any callable target, just as if the callable were a member of the object's class. It implies that the callable will be invoked from the thread associated with the <code>context</code> object and disconnected when the <code>context</code> gets destroyed.
+        </p>
+        <p>
+        Any slot belonging to (or associated with) a <code>context</code> object can be executed synchronously or asynchronously. The default rule is simple: if a signal is emitted from the same thread the <code>context</code> lives in, the execution will be synchronous; otherwise, the execution will be asynchronous. The default behavior may be changed by passing <code>exec::sync</code> or <code>exec::async</code> enumerators as the last argument to the signal's <code>connect()</code> method. If there is no <code>context</code> for a given slot, it will always be executed synchronously.
+        </p>
+        <p>
+        To make cross thread mechanisms work each thread that creates <code>context</code> objects has a private queue with packaged asynchronous slot invocations transferred to that thread. The only way to access the private thread's queue is by calling <code>signals_execute()</code>. This function extracts and executes packaged slot invocations received so far in the calling thread. Calls to <code>signals_execute()</code> can be easily integrated into an existing event loop provided by your application, if any. Otherwise, it is trivial to write such a loop from scratch (see demos).
+        </p>
+        <p>
+        The main rule for successful use of cross thread signal emissions is: always execute slot calls and all operations on a <code>context</code> object in the thread the <code>context</code> belongs to. This guarantees the absence of any race conditions and always does the right thing. By default, the library automatically detects what thread a slot should be invoked in, but users should remember to call <code>signals_execute()</code> function in order to invoke asynchronous queued slots.
+        </p>
+        <p>
+        There is also the <code>lite</code> version of the library designed to be used in a single-threaded environment. It is located in <code>vdk::lite</code> namespace and provides nearly identical interface to its multithreaded counterpart, with the exception that all slots are always executed synchronously.
+        </p>
+      </div>
+    </section>
+    <section id="usage" class="three">
+      <div class="container small">
+        <header>
+          <h2>Usage</h2>
+        </header>
+        <p>
+        <strong>Note!</strong> <code>vdk-signals</code> requires a compiler that supports <strong>C++17</strong> standard.
+        </p>
+        <p>
+        The library is not meant to be built and linked as a standalone package. Instead, it is organized as &quot;the amalgamation&quot; and contains everything you need in just two files. This allows you to easily integrate <code>vdk-signals</code> into any target project. Just copy <code>signals.h</code> and <code>signals.cpp</code> into your project and compile them together with your other source files.
+        </p>
+        <p>
+        Please note, that in order to provide maximum flexibility and independence from target project's structure, <code>signals.cpp</code> includes <code>signals.h</code> as a standard header (<code>#include&lt;signals.h&gt;</code>), so make sure that <code>signals.h</code> resides in a folder that is searched for header files by the compiler.
+        </p>
+        <p>
+        GoogleTest is required to build and run tests. CMake files are provided to simplify the process. If you already have a copy of GoogleTest framework, just run CMake and set <code>GTEST_SOURCE_DIR</code> cache variable to point to the directory that contains your GoogleTest sources. If you don't have GoogleTest sources, CMake will download and compile them automatically.
+        </p>
+        <p>
+        <code>demo</code> directory contains code examples that can serve as a tutorial for learning how to use <code>vdk::signals</code>.
+        </p>
+      </div>
+    </section>
+    <section id="license" class="four">
+      <div class="container small">
+        <header>
+          <h2>License</h2>
+        </header>
+        <p>
+        This software is licensed under the Apache License version 2.0.
+        </p>
+      </div>
+    </section>
+  </div>
+  <div id="footer">
+    <div class="copyright">
+      <p>&copy; vdk-soft. All rights reserved.</p>
+    </div>
+  </div>
+</body>
 
-	<div id="headerwrap">
-		<div class="container">
-			<div class="row centered">
-				<div class="col-lg-8 col-lg-offset-2">
-				<h1><img src="assets/img/c-logo.png" id="c-logo" alt="C++"></h1>
-				<h2>Signals &amp; Slots</h2>
-				<h3>Library</h3>
-				<h4>created with high performance in mind</h4>
-				</div>
-			</div><!-- row -->
-		</div><!-- container -->
-	</div><!-- headerwrap -->
-
-
-	<div class="container w">
-		<div class="row centered">
-<div id="content_1">
-<h3>What is Signals &amp; Slots?</h3>
-<p>Signals and slots is a mechanism used for communication between different parts of some application. The key concept is allowing objects of any kind to communicate with one another while keeping them as much decoupled as possible. Signals are emitted by an object when its internal state has changed in some way that might be interesting to other objects. Slots are called when signals connected to them are emitted. Slots can be used to receive signals, but they are also normal C++ functions and can be called directly.</p>
-<p>The signals and slots mechanism is type safe. The signal type must match the signature of the receiving slot and the compiler helps to detect type mismatches generating compile-time errors. Signals and slots can take any number of arguments of any types. Each signal can be connected to any number of slots and each slot can be connected to any number of signals. It is even possible to connect a signal directly to another signal.</p>
-<p>The signals and slots mechanism is especially convenient for Graphical User Interface programming, but can also be used pretty much everywhere. When one widget changes its state it is often expected that other widgets will be notified. Using this mechanism, the widget can send signal containing even information, which can be received by other widgets.</p>
-<p>Signals-slots concept enables a powerful and flexible component programming mechanism that makes code easy to design and reuse.</p>
-</div>
-		</div><!-- row -->
-		<br>
-		<br>
-	</div><!-- container -->
-
-	<div id="r">
-		<div class="container">
-			<div class="row centered">
-				<div class="col-lg-8 col-lg-offset-2">
-					<p>If you have any comments, questions, ideas, suggestions, or propositions, you are welcome to contact the author. All feedbacks will be much appreciated.</p>
-				</div>
-			</div><!-- row -->
-		</div><!-- container -->
-	</div><!-- r wrap -->
-	
-	
-	<!-- FOOTER -->
-	<div id="f">
-		<div class="container">
-			<div class="row centered footer">
-				Copyright © 2016 vdksoft. All rights reserved.
-			</div><!-- row -->
-		</div><!-- container -->
-	</div><!-- Footer -->
-
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-    <script src="assets/js/bootstrap.min.js"></script>
-  </body>
 </html>

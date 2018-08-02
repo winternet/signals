@@ -1,0 +1,19 @@
+body
+{
+    font-size: 18pt;
+}
+
+#header
+{
+    width: 300px;
+}
+
+#footer
+{
+    margin-left: 300px;
+}
+
+#main
+{
+    margin-left: 300px;
+}

@@ -1,0 +1,14 @@
+body
+{
+    font-size: 14pt;
+}
+
+.container
+{
+    padding: 0 15px 0 15px;
+}
+
+#main > section
+{
+    padding: 2em 0 2em 0;
+}

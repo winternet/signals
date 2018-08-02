@@ -1,0 +1,319 @@
+@charset 'UTF-8';
+
+@font-face
+{
+font-family: 'Titillium Web';
+src: url('font/TitilliumWeb.eot');
+src: url('font/TitilliumWeb.eot?#iefix') format('embedded-opentype'),
+    url('font/TitilliumWeb.woff2') format('woff2'),
+    url('font/TitilliumWeb.woff') format('woff'),
+    url('font/TitilliumWeb.ttf') format('truetype');
+font-weight: normal;
+font-style: normal;
+}
+
+@font-face
+{
+font-family: 'DejaVuSansMono';
+src: url('font/DejaVuSansMono.eot');
+src: url('font/DejaVuSansMono.eot?#iefix') format('embedded-opentype'),
+    url('font/DejaVuSansMono.woff2') format('woff2'),
+    url('font/DejaVuSansMono.woff') format('woff'),
+    url('font/DejaVuSansMono.ttf') format('truetype');
+font-weight: normal;
+font-style: normal;
+}
+
+body
+{
+    font-size: 18pt;
+    line-height: 1.70em;
+    color: #555;
+    background: #fff;
+    font-family: 'Titillium Web', Arial, Helvetica, sans-serif;
+}
+
+h1,h2,h3,h4,h5,h6
+{
+    font-weight: bold;
+    color: #428BCA;
+    line-height: 1.5em;
+}
+
+h1 a, h2 a, h3 a, h4 a, h5 a, h6 a
+{
+    color: inherit;
+    text-decoration: none;
+}
+
+h1
+{
+    font-size: 2.5em;
+}
+
+h2
+{
+    font-size: 2em;
+}
+
+h3
+{
+    font-size: 1.5em;
+}
+
+h4
+{
+    font-size: 1.2em;
+}
+
+header
+{
+    margin: 0 0 2em 0;
+}
+
+footer
+{
+    margin: 2em 0 0 0;
+}
+
+strong, b
+{
+    font-weight: bold;
+    color: #333;
+}
+
+em, i
+{
+    font-style: italic;
+}
+
+a
+{
+    text-decoration: none;
+    color: inherit;
+    border-bottom: dotted 1px rgba(128,128,128,0.5);
+    -moz-transition: color 0.35s ease-in-out, border-bottom-color 0.35s ease-in-out;
+    -webkit-transition: color 0.35s ease-in-out, border-bottom-color 0.35s ease-in-out;
+    -o-transition: color 0.35s ease-in-out, border-bottom-color 0.35s ease-in-out;
+    -ms-transition: color 0.35s ease-in-out, border-bottom-color 0.35s ease-in-out;
+    transition: color 0.35s ease-in-out, border-bottom-color 0.35s ease-in-out;
+    outline: 0;
+}
+
+a:hover
+{
+    color: #E27689;
+    border-bottom-color: rgba(255,255,255,0);
+}
+
+hr
+{
+    border: 0;
+    border-top: solid 1px #ddd;
+}
+
+p, ul, ol, dl, table
+{
+    margin-bottom: 1em;
+}
+
+section > :last-child,
+article > :last-child,
+section > .container > :last-child,
+article > .container > :last-child
+{
+    margin-bottom: 0;
+}
+
+section:last-child,
+article:last-child
+{
+    margin-bottom: 0;
+}
+
+#header
+{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 375px;
+    height: 100%;
+    color: #fff;
+    background: #428BCA url('../images/overlay.png');
+    box-shadow: inset -0.25em 0 0.25em 0 rgba(0,0,0,0.125);
+    text-align: right;
+}
+
+#header .top
+{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+}
+
+#header .bottom
+{
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+}
+
+#logo
+{
+    position: relative;
+    margin: 1.75em 1.5em 1.5em 1.5em;
+    min-height: 48px;
+    cursor: default;
+}
+
+#logo h1
+{
+    position: relative;
+    color: #fff;
+    font-weight: 400;
+    font-size: 1.8em;
+    line-height: 1em;
+}
+
+#logo .byline
+{
+    position: relative;
+    display: block;
+    font-size: 0.9em;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.25em;
+    margin: 0.5em 0 0 0;
+}
+
+#logo .image
+{
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+#nav
+{
+    margin-bottom: 50%;
+}
+
+#nav ul li a
+{
+    display: block;
+    padding: 0.5em 1.5em 0.5em 1.5em;
+    color: rgba(255,255,255,0.5);
+    text-decoration: none;
+    outline: 0;
+    border: 0;
+    -moz-transition: none;
+    -webkit-transition: none;
+    -o-transition: none;
+    -ms-transition: none;
+    transition: none;
+}
+
+#nav ul li a span
+{
+    position: relative;
+    display: block;
+    font-size: 0.8em;
+}
+
+#nav ul li a span:before
+{
+    position: absolute;
+    left: 0;
+    color: #41484c;
+    text-align: center;
+    width: 1.25em;
+}
+
+#nav ul li a.active
+{
+    background: rgba(0,0,0,0.15);
+    box-shadow: inset 0 0 0.25em 0 rgba(0,0,0,0.125);
+    color: #fff;
+}
+
+#nav ul li a.active span
+{
+}
+
+#nav ul li a.active span:before
+{
+    color: #E27689;
+}
+
+#footer
+{
+    margin-left: 375px;
+    text-align: center;
+    background-color: #dce3e2;
+    padding: 3em 0 4em 0;
+    box-shadow: inset 0 1px 0 0 rgba(0,0,0,0.05), inset 0 0.1em 0.1em 0 rgba(0,0,0,0.025);
+    font-size: 0.8em;
+}
+
+#footer .copyright
+{
+    line-height: 1.25em;
+}
+
+#footer .copyright p
+{
+    margin: 0 0 1em 0;
+}
+
+#main
+{
+    margin-left: 375px;
+}
+
+#main > section
+{
+    margin: 0;
+    overflow: hidden;
+    padding: 3em 0 4em 0;
+    box-shadow: inset 0 1px 0 0 rgba(0,0,0,0.05), inset 0 0.1em 0.1em 0 rgba(0,0,0,0.025);
+    text-align: left;
+    background-image: url('../images/overlay.png');
+}
+
+#main > section.one
+{
+    background: #fff;
+}
+
+#main > section.two
+{
+    background-color: #f5fafa;
+}
+
+#main > section.three
+{
+    background-color: #ecf1f1;
+}
+
+#main > section.four
+{
+    background-color: #e8edec;
+}
+
+#github-button
+{
+    display: block;
+    background: transparent url(../images/github-button.png) no-repeat;
+    background-position: 0px 0px, center;
+    background-size: contain;
+    width: 160px;
+    height: 64px;
+    margin: 0 auto;
+    border: none;
+}
+
+code
+{
+    font-family: 'DejaVuSansMono', courier, monospace;
+}
