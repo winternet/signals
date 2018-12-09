@@ -206,6 +206,7 @@ TYPED_TEST(SignalsTest, Empty)
 {
     using signal_t = typename TestFixture::signal_int_t;
     signal_t sig;
+    EXPECT_EQ(sig.num_slots(), 0U);
     sig.emit(5);
     sig(5);
     sig.disconnect();
@@ -220,12 +221,14 @@ TYPED_TEST(SignalsTest, Function)
     global_indicator.clear();
     EXPECT_NE(sig.connect(function), 0U);
     sig.emit(5);
+    EXPECT_EQ(sig.num_slots(), 1U);
     EXPECT_EQ(global_indicator.count(5), 1U);
     EXPECT_EQ(global_indicator.size(), 1U);
 
     global_indicator.clear();
     EXPECT_TRUE(sig.disconnect(function));
     sig.emit(5);
+    EXPECT_EQ(sig.num_slots(), 0U);
     EXPECT_EQ(global_indicator.size(), 0U);
     EXPECT_FALSE(sig.disconnect(function));
 
@@ -233,8 +236,10 @@ TYPED_TEST(SignalsTest, Function)
     void(*func_null)(int) = nullptr;
     EXPECT_EQ(sig.connect(func_null), 0U);
     sig.emit(5);
+    EXPECT_EQ(sig.num_slots(), 0U);
     EXPECT_EQ(global_indicator.size(), 0U);
     EXPECT_FALSE(sig.disconnect(func_null));
+    EXPECT_EQ(sig.num_slots(), 0U);
 }
 
 TYPED_TEST(SignalsTest, Functor)
@@ -245,26 +250,31 @@ TYPED_TEST(SignalsTest, Functor)
     global_indicator.clear();
     EXPECT_NE(sig.connect(functor{ 1 }), 0U);
     sig.emit(5);
+    EXPECT_EQ(sig.num_slots(), 1U);
     EXPECT_EQ(global_indicator.count(5), 1U);
     EXPECT_EQ(global_indicator.size(), 1U);
 
     global_indicator.clear();
     EXPECT_TRUE(sig.disconnect(functor{ 1 }));
     sig.emit(5);
+    EXPECT_EQ(sig.num_slots(), 0U);
     EXPECT_EQ(global_indicator.size(), 0U);
     EXPECT_FALSE(sig.disconnect(functor{ 1 }));
+    EXPECT_EQ(sig.num_slots(), 0U);
 }
 
 TYPED_TEST(SignalsTest, Lambda)
 {
     using signal_t = typename TestFixture::signal_int_t;
     signal_t sig;
+    EXPECT_EQ(sig.num_slots(), 0U);
     double ballast = 2.0; // Prevent lambda from turning into function
     auto lambda = [ballast](int arg) { global_indicator(arg); };
 
     global_indicator.clear();
     EXPECT_NE(sig.connect(lambda), 0U);
     sig.emit(5);
+    EXPECT_EQ(sig.num_slots(), 1U);
     EXPECT_EQ(global_indicator.count(5), 1U);
     EXPECT_EQ(global_indicator.size(), 1U);
 
@@ -273,6 +283,7 @@ TYPED_TEST(SignalsTest, Lambda)
     EXPECT_FALSE(sig.disconnect(lambda));
     // Lambda has not been disconnected
     sig.emit(5);
+    EXPECT_EQ(sig.num_slots(), 1U);
     EXPECT_EQ(global_indicator.count(5), 1U);
     EXPECT_EQ(global_indicator.size(), 1U);
 }
@@ -287,12 +298,14 @@ TYPED_TEST(SignalsTest, Method)
     global_indicator.clear();
     EXPECT_NE(sig.connect(&object, &class_t::method), 0U);
     sig.emit(5);
+    EXPECT_EQ(sig.num_slots(), 1U);
     EXPECT_EQ(global_indicator.count(5), 1U);
     EXPECT_EQ(global_indicator.size(), 1U);
 
     global_indicator.clear();
     EXPECT_TRUE(sig.disconnect(&object, &class_t::method));
     sig.emit(5);
+    EXPECT_EQ(sig.num_slots(), 0U);
     EXPECT_EQ(global_indicator.size(), 0U);
     EXPECT_FALSE(sig.disconnect(&object, &class_t::method));
 
@@ -300,17 +313,20 @@ TYPED_TEST(SignalsTest, Method)
     void(class_t::*method)(int) = nullptr;
     EXPECT_EQ(sig.connect(&object, method), 0U);
     sig.emit(5);
+    EXPECT_EQ(sig.num_slots(), 0U);
     EXPECT_EQ(global_indicator.size(), 0U);
 
     global_indicator.clear();
     class_t * obj = nullptr;
     EXPECT_EQ(sig.connect(obj, &class_t::method), 0U);
     sig.emit(5);
+    EXPECT_EQ(sig.num_slots(), 0U);
     EXPECT_EQ(global_indicator.size(), 0U);
 
     global_indicator.clear();
     EXPECT_EQ(sig.connect(obj, method), 0U);
     sig.emit(5);
+    EXPECT_EQ(sig.num_slots(), 0U);
     EXPECT_EQ(global_indicator.size(), 0U);
 
     EXPECT_FALSE(sig.disconnect(&object, method));
@@ -330,11 +346,13 @@ TYPED_TEST(SignalsTest, ContextMethod)
     sig.emit(5);
     EXPECT_EQ(global_indicator.count(5), 1U);
     EXPECT_EQ(global_indicator.size(), 1U);
+    EXPECT_EQ(sig.num_slots(), 1U);
 
     global_indicator.clear();
     EXPECT_TRUE(sig.disconnect(&object, &class_t::method));
     sig.emit(5);
     EXPECT_EQ(global_indicator.size(), 0U);
+    EXPECT_EQ(sig.num_slots(), 0U);
     EXPECT_FALSE(sig.disconnect(&object, &class_t::method));
 
     global_indicator.clear();
@@ -342,21 +360,25 @@ TYPED_TEST(SignalsTest, ContextMethod)
     EXPECT_EQ(sig.connect(&object, method), 0U);
     sig.emit(5);
     EXPECT_EQ(global_indicator.size(), 0U);
+    EXPECT_EQ(sig.num_slots(), 0U);
 
     global_indicator.clear();
     class_t * obj = nullptr;
     EXPECT_EQ(sig.connect(obj, &class_t::method), 0U);
     sig.emit(5);
     EXPECT_EQ(global_indicator.size(), 0U);
+    EXPECT_EQ(sig.num_slots(), 0U);
 
     global_indicator.clear();
     EXPECT_EQ(sig.connect(obj, method), 0U);
     sig.emit(5);
     EXPECT_EQ(global_indicator.size(), 0U);
+    EXPECT_EQ(sig.num_slots(), 0U);
 
     EXPECT_FALSE(sig.disconnect(&object, method));
     EXPECT_FALSE(sig.disconnect(obj, &class_t::method));
     EXPECT_FALSE(sig.disconnect(obj, method));
+    EXPECT_EQ(sig.num_slots(), 0U);
 }
 
 TYPED_TEST(SignalsTest, DisconnectById)
@@ -376,18 +398,22 @@ TYPED_TEST(SignalsTest, DisconnectById)
     EXPECT_NE(id2, 0U);
     EXPECT_NE(id3, 0U);
     EXPECT_NE(id4, 0U);
+    EXPECT_EQ(sig.num_slots(), 4U);
     
     // id value 0 disconnects nothing
     EXPECT_FALSE(sig.disconnect(unsigned(0)));
+    EXPECT_EQ(sig.num_slots(), 4U);
     
     EXPECT_TRUE(sig.disconnect(id1));
     EXPECT_TRUE(sig.disconnect(id2));
     EXPECT_TRUE(sig.disconnect(id3));
     EXPECT_TRUE(sig.disconnect(id4));
+    EXPECT_EQ(sig.num_slots(), 0U);
     EXPECT_FALSE(sig.disconnect(id1));
     EXPECT_FALSE(sig.disconnect(id2));
     EXPECT_FALSE(sig.disconnect(id3));
     EXPECT_FALSE(sig.disconnect(id4));
+    EXPECT_EQ(sig.num_slots(), 0U);
 
     global_indicator.clear();
     sig.emit(5);
@@ -404,26 +430,41 @@ TYPED_TEST(SignalsTest, ConnectDisconnectEqualSlotsByOne)
     EXPECT_NE(sig.connect(function), 0U);
     EXPECT_NE(sig.connect(function), 0U);
     EXPECT_NE(sig.connect(function), 0U);
+    EXPECT_EQ(sig.num_slots(), 3U);
     EXPECT_TRUE(sig.disconnect(function));
+    EXPECT_EQ(sig.num_slots(), 2U);
     EXPECT_TRUE(sig.disconnect(function));
+    EXPECT_EQ(sig.num_slots(), 1U);
     EXPECT_TRUE(sig.disconnect(function));
+    EXPECT_EQ(sig.num_slots(), 0U);
     EXPECT_FALSE(sig.disconnect(function));
+    EXPECT_EQ(sig.num_slots(), 0U);
 
     EXPECT_NE(sig.connect(functor{ 1 }), 0U);
+    EXPECT_EQ(sig.num_slots(), 1U);
     EXPECT_NE(sig.connect(functor{ 1 }), 0U);
+    EXPECT_EQ(sig.num_slots(), 2U);
     EXPECT_NE(sig.connect(functor{ 1 }), 0U);
+    EXPECT_EQ(sig.num_slots(), 3U);
     EXPECT_TRUE(sig.disconnect(functor{ 1 }));
+    EXPECT_EQ(sig.num_slots(), 2U);
     EXPECT_TRUE(sig.disconnect(functor{ 1 }));
+    EXPECT_EQ(sig.num_slots(), 1U);
     EXPECT_TRUE(sig.disconnect(functor{ 1 }));
+    EXPECT_EQ(sig.num_slots(), 0U);
     EXPECT_FALSE(sig.disconnect(functor{ 1 }));
+    EXPECT_EQ(sig.num_slots(), 0U);
 
     EXPECT_NE(sig.connect(&object, &class_t::method), 0U);
     EXPECT_NE(sig.connect(&object, &class_t::method), 0U);
     EXPECT_NE(sig.connect(&object, &class_t::method), 0U);
+    EXPECT_EQ(sig.num_slots(), 3U);
     EXPECT_TRUE(sig.disconnect(&object, &class_t::method));
     EXPECT_TRUE(sig.disconnect(&object, &class_t::method));
     EXPECT_TRUE(sig.disconnect(&object, &class_t::method));
+    EXPECT_EQ(sig.num_slots(), 0U);
     EXPECT_FALSE(sig.disconnect(&object, &class_t::method));
+    EXPECT_EQ(sig.num_slots(), 0U);
 
     global_indicator.clear();
     sig.emit(5);
@@ -437,14 +478,20 @@ TYPED_TEST(SignalsTest, CompareFunctions)
 
     EXPECT_NE(sig.connect(function), 0U);
     EXPECT_NE(sig.connect(function_unique), 0U);
+    EXPECT_EQ(sig.num_slots(), 2U);
     EXPECT_TRUE(sig.disconnect(function));
+    EXPECT_EQ(sig.num_slots(), 1U);
     EXPECT_FALSE(sig.disconnect(function));
+    EXPECT_EQ(sig.num_slots(), 1U);
     EXPECT_TRUE(sig.disconnect(function_unique));
+    EXPECT_EQ(sig.num_slots(), 0U);
     EXPECT_FALSE(sig.disconnect(function_unique));
+    EXPECT_EQ(sig.num_slots(), 0U);
 
     global_indicator.clear();
     sig.emit(5);
     EXPECT_EQ(global_indicator.size(), 0U);
+    EXPECT_EQ(sig.num_slots(), 0U);
 }
 
 TYPED_TEST(SignalsTest, CompareFunctors)
@@ -455,6 +502,7 @@ TYPED_TEST(SignalsTest, CompareFunctors)
     EXPECT_NE(sig.connect(functor{ 1 }), 0U);
     EXPECT_NE(sig.connect(functor{ 2 }), 0U);
     EXPECT_NE(sig.connect(functor{ 3 }), 0U);
+    EXPECT_EQ(sig.num_slots(), 3U);
     EXPECT_TRUE(sig.disconnect(functor{ 1 }));
     EXPECT_FALSE(sig.disconnect(functor{ 1 }));
     EXPECT_TRUE(sig.disconnect(functor{ 2 }));
@@ -465,6 +513,7 @@ TYPED_TEST(SignalsTest, CompareFunctors)
     global_indicator.clear();
     sig.emit(5);
     EXPECT_EQ(global_indicator.size(), 0U);
+    EXPECT_EQ(sig.num_slots(), 0U);
 }
 
 TYPED_TEST(SignalsTest, CompareMethods)

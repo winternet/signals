@@ -10,6 +10,7 @@
 #include <new>
 #include <tuple>
 #include <cstddef>
+#include <atomic>
 #include <utility>
 #include <type_traits>
 
@@ -386,6 +387,7 @@ auto signal_disconnect(sig_ctrl*)noexcept->void;
 auto signal_activate(sig_ctrl*, void*)->void;
 auto signal_block(sig_ctrl*, bool)noexcept->bool;
 auto signal_blocked(const sig_ctrl*)noexcept->bool;
+auto num_slots(const sig_ctrl*)noexcept->size_t;
 
 } // namespace internal::signals
 
@@ -440,6 +442,7 @@ public:
 
     bool block(bool yes = true) noexcept;
     bool blocked() const noexcept;
+    size_t num_slots() const noexcept;
 
     signal(const signal &) = delete;
     signal(signal &&) = delete;
@@ -614,6 +617,12 @@ bool signal<void(ArgTs...)>::blocked() const noexcept
     return vdk::internal::signals::signal_blocked(ctrl_);
 }
 
+template<typename ... ArgTs>
+size_t signal<void(ArgTs...)>::num_slots() const noexcept
+{
+    return vdk::internal::signals::num_slots(ctrl_);
+}
+
 } // namespace vdk
 
 
@@ -670,6 +679,7 @@ auto signal_disconnect(sig_ctrl*)noexcept->void;
 auto signal_activate(sig_ctrl*, void*)->void;
 auto signal_block(sig_ctrl*, bool)noexcept->bool;
 auto signal_blocked(const sig_ctrl*)noexcept->bool;
+auto num_slots(const sig_ctrl*)noexcept->size_t;
 
 } // namespace internal::signals::lite
 
@@ -722,6 +732,7 @@ public:
 
     bool block(bool yes = true) noexcept;
     bool blocked() const noexcept;
+    size_t num_slots() const noexcept;
 
     signal(const signal &) = delete;
     signal(signal &&) = delete;
@@ -894,6 +905,12 @@ template<typename ... ArgTs>
 bool signal<void(ArgTs...)>::blocked() const noexcept
 {
     return vdk::internal::signals::lite::signal_blocked(ctrl_);
+}
+
+template<typename ... ArgTs>
+size_t signal<void(ArgTs...)>::num_slots() const noexcept
+{
+    return vdk::internal::signals::lite::num_slots(ctrl_);
 }
 
 } // namespace lite

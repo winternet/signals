@@ -484,6 +484,8 @@ public:
     // Returns true if the signal is blocked, false otherwise
     friend bool signal_blocked(const sig_ctrl * self) noexcept;
 
+    friend size_t num_slots(const sig_ctrl * self) noexcept;
+
     // Release ownership of the control block
     void free() noexcept;
 
@@ -549,6 +551,7 @@ private:
     unsigned int                ids_;
     std::atomic_uint            state_;
     slim_lock                   mutex_;
+    std::atomic_uint            num_slots_;
 };
 
 sig_ctrl::sig_ctrl() noexcept
@@ -557,7 +560,8 @@ sig_ctrl::sig_ctrl() noexcept
       execs_{ active_flag },
       ids_{ 0 },
       state_{ 0 },
-      mutex_{}
+      mutex_{},
+      num_slots_{ 0 }
 {}
 
 sig_ctrl::~sig_ctrl() noexcept
@@ -749,6 +753,7 @@ unsigned int signal_connect(sig_ctrl * self,
                             exec type)
 {
     auto_lock lock{ self->mutex_ };
+    self->num_slots_++;
 
     auto curr = self->list_.load();
     auto prev = &self->list_;
@@ -822,6 +827,7 @@ bool signal_disconnect(sig_ctrl * self, target * slot) noexcept
     }
 
     if (self->rmvd_) self->cleanup();
+    if (done) self->num_slots_--;
     return done;
 }
 
@@ -853,6 +859,7 @@ bool signal_disconnect(sig_ctrl * self, unsigned int id) noexcept
     }
 
     if (self->rmvd_) self->cleanup();
+    if (done) self->num_slots_--;
     return done;
 }
 
@@ -964,6 +971,11 @@ bool signal_block(sig_ctrl * self, bool yes) noexcept
 bool signal_blocked(const sig_ctrl * self) noexcept
 {
     return self->state_.load() & sig_ctrl::blocked_flag;
+}
+
+size_t num_slots(const sig_ctrl * self) noexcept
+{
+    return self->num_slots_;
 }
 
 sig_ctrl* signal_construct()
@@ -1256,6 +1268,8 @@ public:
     // Returns true if the signal is blocked, false otherwise
     friend bool signal_blocked(const sig_ctrl * self) noexcept;
 
+    friend size_t num_slots(const sig_ctrl * self) noexcept;
+
     // Release ownership of the control block
     void free() noexcept;
 
@@ -1293,6 +1307,7 @@ private:
     size_t          execs_;
     unsigned int    ids_;
     uint            state_;
+    std::atomic_size_t num_slots_;
 };
 
 sig_ctrl::sig_ctrl() noexcept
@@ -1300,7 +1315,8 @@ sig_ctrl::sig_ctrl() noexcept
       rmvd_{ nullptr },
       execs_{ 0 },
       ids_{ 0 },
-      state_{ 0 }
+      state_{ 0 },
+      num_slots_{ 0 }
 {}
 
 sig_ctrl::~sig_ctrl() noexcept
@@ -1422,6 +1438,7 @@ unsigned int signal_connect(sig_ctrl * self,
                             target * slot,
                             ctx_ctrl * cntx)
 {
+    ++self->num_slots_;
     auto curr = self->list_;
     auto prev = &self->list_;
 
@@ -1488,6 +1505,7 @@ bool signal_disconnect(sig_ctrl * self, target * slot) noexcept
         curr = curr->next_;
     }
 
+    if(done) self->num_slots_--;
     return done;
 }
 
@@ -1516,6 +1534,7 @@ bool signal_disconnect(sig_ctrl * self, unsigned int id) noexcept
         curr = curr->next_;
     }
 
+    if(done) self->num_slots_--;
     return done;
 }
 
@@ -1585,6 +1604,11 @@ bool signal_block(sig_ctrl * self, bool yes) noexcept
 bool signal_blocked(const sig_ctrl * self) noexcept
 {
     return self->state_ & sig_ctrl::blocked_flag;
+}
+
+size_t num_slots(const sig_ctrl * self) noexcept
+{
+    return self->num_slots_;
 }
 
 sig_ctrl* signal_construct()
