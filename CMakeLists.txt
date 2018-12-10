@@ -8,10 +8,11 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-set(CMAKE_BUILD_TYPE 				Debug)
+include_directories(include)
+file(GLOB SOURCES src/*.cc)
 
-add_library(signals "")
-target_sources(signals PRIVATE ${CMAKE_SOURCE_DIR}/src/signals.h
+add_library(signals SHARED "")
+target_sources(signals PRIVATE ${CMAKE_SOURCE_DIR}/include/signals.h
                                ${CMAKE_SOURCE_DIR}/src/signals.cpp)
 target_include_directories(signals PUBLIC ${CMAKE_SOURCE_DIR}/src)
 target_compile_options(signals PUBLIC
