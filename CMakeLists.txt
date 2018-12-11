@@ -11,7 +11,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 include_directories(include)
 file(GLOB SOURCES src/*.cc)
 
-add_library(signals SHARED "")
+add_library(signals "")
 target_sources(signals PRIVATE ${CMAKE_SOURCE_DIR}/include/signals.h
                                ${CMAKE_SOURCE_DIR}/src/signals.cpp)
 target_include_directories(signals PUBLIC ${CMAKE_SOURCE_DIR}/src)
