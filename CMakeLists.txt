@@ -24,5 +24,13 @@ target_compile_options(signals PUBLIC
 find_package (Threads)
 target_link_libraries (signals PUBLIC ${CMAKE_THREAD_LIBS_INIT})
     
-add_subdirectory(tests)
-add_subdirectory(demo)
+option(SIGNALS__ENABLE_TESTS "Enable tests" OFF)
+option(SIGNALS__ENABLE_DEMO "Enable demo" OFF)
+
+if(SIGNALS__ENABLE_TESTS)
+  add_subdirectory(tests)
+endif()
+
+if(SIGNALS__ENABLE_DEMO)
+  add_subdirectory(demo)
+endif()
